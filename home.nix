@@ -6,9 +6,26 @@
 
   home.packages = with pkgs; [
     neofetch
-
     firefox
   ];
+
+  programs.git = {
+    enable = true;
+    userName = "he1d1";
+    userEmail = "hey@heidi.codes";
+  };
+
+  programs.neovim = {
+    enable = true; 
+    defaultEditor = true;
+    viAlias = true; 
+    vimAlias = true; 
+    plugins = with pkgs.vimPlugins; [
+      nvim-lspconfig
+      nvim-treesitter.withAllGrammars
+      gruvbox-material
+    ];
+  };
 
   home.stateVersion = "23.11";
 
