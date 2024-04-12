@@ -1,8 +1,11 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   home.username = "heidi";
   home.homeDirectory = "/home/heidi";
+
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+  ];
 
   home.packages = with pkgs; [
     neofetch
@@ -13,10 +16,24 @@
 
   programs.fish.enable = true;
 
+  programs.ssh = {
+    enable = true;
+    extraConfig = ''
+      Host *
+          IdentityAgent ~/.1password/agent.sock
+    '';
+  };
+
   programs.git = {
     enable = true;
     userName = "he1d1";
     userEmail = "hey@heidi.codes";
+    signing.key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP0no06qCsMxgQuiXknZmxE1ZqA2GzyWJBLhoTvkyAqh";
+    signing.signByDefault = true;
+    extraConfig = {
+      gpg.format = "ssh";
+      gpg."ssh".program = "${pkgs._1password-gui}/bin/op-ssh-sign";
+    };
   };
 
   programs.neovim = {

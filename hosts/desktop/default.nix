@@ -67,6 +67,12 @@
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+    "1password-gui"
+    "1password-cli"
+    "1password"
+  ];
+
   environment.systemPackages = with pkgs; [
     git
     neovim
@@ -85,6 +91,11 @@
         exec ${pkgs.fish}/bin/fish $LOGIN_OPTION
       fi
     '';
+  };
+  programs._1password.enable = true;
+  programs._1password-gui = {
+    enable = true;
+    polkitPolicyOwners = [ "heidi" ];
   };
   # programs.mtr.enable = true;
   # programs.gnupg.agent = {
