@@ -73,6 +73,9 @@
     "1password"
     "spotify"
     "discord"
+    "steam"
+    "steam-original"
+    "steam-run"
   ];
 
   environment.systemPackages = with pkgs; [
