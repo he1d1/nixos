@@ -4,12 +4,11 @@
   home.username = "heidi";
   home.homeDirectory = "/home/heidi";
 
-  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-  ];
-
   home.packages = with pkgs; [
     neofetch
     firefox
+    spotify
+    discord
     st
     dmenu
   ];
