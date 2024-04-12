@@ -7,6 +7,8 @@
   home.packages = with pkgs; [
     neofetch
     firefox
+    st
+    dmenu
   ];
 
   programs.git = {
