@@ -11,6 +11,8 @@
     dmenu
   ];
 
+  programs.fish.enable = true;
+
   programs.git = {
     enable = true;
     userName = "he1d1";
