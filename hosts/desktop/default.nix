@@ -102,11 +102,15 @@
 
   environment.systemPackages = with pkgs; [
     git
-    neovim
     wget
     curl
   ];
+
   environment.variables.EDITOR = "nvim";
+
+  fonts.packages = with pkgs; [
+    (nerdfonts.override { fonts = [ "Noto" ]; })
+  ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
