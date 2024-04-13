@@ -9,7 +9,6 @@
     firefox
     spotify
     discord
-    steam
     st
     dmenu
   ];
