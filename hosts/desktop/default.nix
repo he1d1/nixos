@@ -39,6 +39,7 @@
 
 
 
+
   
 
   # Configure keymap in X11
@@ -48,6 +49,21 @@
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
+
+  # Nvidia
+  hardware.opengl = {
+    enable = true;
+    driSupport = true;
+    driSupport32Bit = true;
+  };
+
+  services.xserver.videoDrivers = ["nvidia"];
+
+  hardware.nvidia = {
+    modesetting.enable = true;
+    open = true;
+    nvidiaSettings = false;
+  };
 
   # Enable sound.
   security.rtkit.enable = true;
@@ -80,6 +96,8 @@
     "steam"
     "steam-original"
     "steam-run"
+    "nvidia"
+    "nvidia-x11"
   ];
 
   environment.systemPackages = with pkgs; [
