@@ -34,7 +34,7 @@
   services.xserver.enable = true;
   services.xserver.windowManager.dwm.enable = true;
   services.xserver.displayManager.setupCommands = ''
-    ${pkgs.xorg.xrandr}/bin/xrandr --output DP-2 --primary --rate 144 --output DP-2 --rate 144 --rotate left
+    ${pkgs.xorg.xrandr}/bin/xrandr --output DP-2 --primary --rate 144 --output DP-4 --rate 144 --rotate left
   '';
 
 
