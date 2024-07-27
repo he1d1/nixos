@@ -9,11 +9,28 @@
   home.homeDirectory = "/home/heidi";
 
   home.packages = with pkgs; [
+    steamtinkerlaunch
+    prismlauncher
+    go
+    operator-sdk
+    kubernetes-helm
+    kubectl
+    xclip
+    oversteer
     neofetch
     firefox
     spotify
     discord
     dmenu
+    qemu
+    (dwmblocks.overrideAttrs (oldAttrs: rec {
+      patches = [
+        (pkgs.fetchpatch {
+          url = "https://gist.githubusercontent.com/IGeraGera/e4a5583b91b3eec2e81fdceb44dea717/raw/c835582ad8c47a3b8dddb33925aed8cc16cf87e7/dwmblocks-statuscmd-b6b0be4.diff";
+          hash = "sha256-TBI271HWBBWYbpN2ERx7nHBhChG63w+BwcagW1cHAQQ=";
+        })
+      ];
+    }))
     (st.overrideAttrs (oldAttrs: rec {
       buildInputs = oldAttrs.buildInputs ++ [ harfbuzz ];
       patches = [
@@ -58,6 +75,23 @@
     colorschemes.gruvbox.enable = true;
     plugins = {
       lualine.enable = true;
+      coq-nvim = {
+        enable = true;
+	autoStart = true;
+	recommendedKeymaps = true;
+	installArtifacts = true; 
+      };
+      lsp = {
+        enable = true;
+	servers.rust-analyzer = {
+	  enable = true;
+	  cargoPackage = "cargo";
+	  rustcPackage = "rustc";
+	};
+	servers.gopls = {
+	  enable = true; 
+	};
+      };
     };
   };
 

@@ -4,6 +4,11 @@
 
 { config, lib, pkgs, ... }:
 
+let
+  unstable = import
+    (builtins.fetchTarball { url = "https://github.com/nixos/nixpkgs/tarball/61686ba251c910920ee2566944596d5bd2eb945e"; sha256 = "sha256:1hxscj74ji2i8mcd9vzkl8v292vplp33m5gq231j1a45id9l47zv";})
+    { config = config.nixpkgs.config; };
+in
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -11,11 +16,24 @@
     ];
 
   boot.loader.systemd-boot.enable = true;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  hardware.enableRedistributableFirmware = true;
 
   networking.hostName = "desktop"; # Define your hostname.
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  # networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
+  networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
+  networking.interfaces.enp9s0.wakeOnLan.enable = true;
+  services.blueman.enable = true;
+  hardware.bluetooth.enable = true; # enables support for Bluetooth
+  hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
+
+  # mdns
+  services.avahi.enable = true;
+
+  services.tailscale.enable = true;
+  services.tailscale.useRoutingFeatures = "both";
 
   # Set your time zone.
   time.timeZone = "Europe/London";
@@ -32,11 +50,20 @@
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
-  services.xserver.windowManager.dwm.enable = true;
+  services.xserver.windowManager.dwm = {
+    enable = true;
+    package = pkgs.dwm.override {
+      patches = [
+        (pkgs.fetchpatch {
+          url = "https://dwm.suckless.org/patches/statuscmd/dwm-statuscmd-20210405-67d76bd.diff";
+          hash = "sha256-1lYc6ybGhHokZAi0SNFPq5FVQyWtRxjawQ1YpX2KiCE=";
+        })
+      ];
+    };
+  };
   services.xserver.displayManager.setupCommands = ''
     ${pkgs.xorg.xrandr}/bin/xrandr --output DP-2 --auto --primary --rate 144 --output DP-4 --auto --rate 144 --rotate left --right-of DP-2
   '';
-
 
 
 
@@ -61,7 +88,7 @@
 
   hardware.nvidia = {
     modesetting.enable = true;
-    open = true;
+    open = false;
     nvidiaSettings = false;
   };
 
@@ -96,14 +123,18 @@
     "steam"
     "steam-original"
     "steam-run"
+    "vscode" 
     "nvidia"
     "nvidia-x11"
   ];
 
   environment.systemPackages = with pkgs; [
+    jetbrains.idea-community
+    ansible
     git
     wget
     curl
+    vscode
   ];
 
   environment.variables.EDITOR = "nvim";
@@ -132,6 +163,10 @@
     enable = true;
     remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
     dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+  };
+  programs.java = {
+    enable = true; 
+    package = pkgs.jdk21;
   };
   # programs.mtr.enable = true;
   # programs.gnupg.agent = {
